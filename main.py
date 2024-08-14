@@ -160,16 +160,17 @@ def refresh_applications():
     # Clear the current labels (if any)
     for widget in root.grid_slaves():
         widget.grid_forget()
-
+    if(len(db.get_all_applications()) != 0 ):
     # Create labels for the column headers
-    tk.Label(root, text="Company Name").grid(row=0, column=0)
-    tk.Label(root, text="Position").grid(row=0, column=1)
-    tk.Label(root, text="Email").grid(row=0, column=2)
-    tk.Label(root, text="Password").grid(row=0, column=3)
-    tk.Label(root, text="Interview Stage").grid(row=0, column=4)
-    tk.Label(root, text="Notes").grid(row=0, column=5)
+        tk.Label(root, text="Company Name").grid(row=0, column=0)
+        tk.Label(root, text="Position").grid(row=0, column=1)
+        tk.Label(root, text="Email").grid(row=0, column=2)
+        tk.Label(root, text="Password").grid(row=0, column=3)
+        tk.Label(root, text="Interview Stage").grid(row=0, column=4)
+        tk.Label(root, text="Notes").grid(row=0, column=5)
 
     # Fetch and display all applications
+    i = 0
     applications = db.get_all_applications()
     for i, app in enumerate(applications, start=1):
         id, company_name, position, email, password, interview_stage, notes = app
@@ -181,7 +182,7 @@ def refresh_applications():
         tk.Label(root, text=notes).grid(row=i, column=5)
 
     # Add Application button
-    tk.Button(root, text="Add Application", command=open_add_application_window).grid(row=i + 1, column=0, columnspan=6)
+    tk.Button(root, text="Add Application", command=open_add_application_window).grid(row=i + 1 , column=0, columnspan=6)
     #Add Manage Application Button
     tk.Button(root, text="Manage Applications", command=open_management_window).grid(row=i + 10, column=0, columnspan=6)
 
