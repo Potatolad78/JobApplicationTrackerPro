@@ -65,6 +65,53 @@ class DB:
             print(f"Notes: {notes}")
             print("-" * 40)  # Separator line for readability
 
+    def search_company_applications(self, prompt):
+        # Convert the search prompt to lowercase for case-insensitive search
+        prompt_lower = prompt.lower()
+        
+        # Create a list to store matching applications
+        matching_applications = []
+        
+        # Iterate over all applications
+        for app in self.get_all_applications():
+            company_name = app[1]  # Assuming company_name is the second element in the tuple
+            
+            # Check for a partial match
+            if prompt_lower in company_name.lower():
+                # Add the application to the matching list
+                matching_applications.append(app)
+        
+        # Return the list of matching applications (could be empty)
+        return matching_applications
+    
+    def change_content_from_id(self, id, company_name, position, email, password, interview_stage, notes):
+        # Update the application with the specified ID
+        self.c.execute('''
+            UPDATE applications
+            SET company_name = ?,
+                position = ?,
+                email = ?,
+                password = ?,
+                interview_stage = ?,
+                notes = ?
+            WHERE id = ?
+        ''', (company_name, position, email, password, interview_stage, notes, id))
+        
+        # Commit changes
+        self.conn.commit()
+
+        # Optionally, verify if the update was successful
+        self.c.execute('SELECT * FROM applications WHERE id = ?', (id,))
+        updated_application = self.c.fetchone()
+        if updated_application:
+            print("Update successful:", updated_application)
+        else:
+            print("Update failed, no application found with this ID")
+
+
+
+
+
 
 
 
