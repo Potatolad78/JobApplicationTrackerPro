@@ -108,7 +108,13 @@ class DB:
         else:
             print("Update failed, no application found with this ID")
 
+    def remove_content_from_id(self, id):
+        self.c.execute('''
+        DELETE FROM applications
+        WHERE id = ?               
+        ''', (id,))
 
+        self.conn.commit()
 
 
 
