@@ -5,6 +5,16 @@ import tkinter as tk
 root = tk.Tk()
 root.title("Job Application Tracker")
 
+
+#Set the size of the root and where it spawns
+def center_window(window, padding_x=10, padding_y=0):
+    window.update_idletasks()  # Ensure the window dimensions are calculated
+    width = window.winfo_reqwidth()
+    height = window.winfo_reqheight()
+    x = (window.winfo_screenwidth() // 2) - (width // 2)
+    y = (window.winfo_screenheight() // 2) - (height // 2) 
+    window.geometry(f'{width}x{height}+{x}+{y}')
+
 # Create an instance of the DB class
 db = DB()
 
@@ -18,6 +28,7 @@ def open_add_application_window():
     tk.Label(add_window, text="Company Name:").grid(row=0, column=0)
     company_name_entry = tk.Entry(add_window)
     company_name_entry.grid(row=0, column=1)
+    company_name_entry.focus_set()
 
     tk.Label(add_window, text="Position:").grid(row=1, column=0)
     position_entry = tk.Entry(add_window)
@@ -57,6 +68,7 @@ def open_add_application_window():
     # Create a button to submit the data
     tk.Button(add_window, text="Add Application", command=add_application).grid(row=6, column=0, columnspan=2)
     add_window.bind('<Return>', lambda event: add_application())
+    center_window(add_window)
 
 def open_management_window(searching, id=None, company_name = None, position = None, email = None, password = None, interview_stage = None, notes = None):
     # Creates the window
@@ -67,7 +79,13 @@ def open_management_window(searching, id=None, company_name = None, position = N
     tk.Label(manage_window, text="Search for Company").grid(row=0, column=0)
     company_search = tk.Entry(manage_window)
     company_search.grid(row=0, column=1)
+    company_search.focus_set()
+    center_window(manage_window)
+
+
+
     def manage_application(id,company_name, position, email, password, interview_stage, notes):
+            manage_window.title("Manage Applications")
             def change_content_kill(id,company_name,position, email, password, interview_stage, notes):
                 db.change_content_from_id(id,company_name,position,email,password,interview_stage,notes)
                 manage_window.destroy()  # Close the add application window after adding
@@ -87,6 +105,8 @@ def open_management_window(searching, id=None, company_name = None, position = N
             company_name_entry = tk.Entry(manage_window)
             company_name_entry.grid(row=0, column=1)
             company_name_entry.insert(0, company_name)
+            #Focus on the company name so that when you open a window you are instantly selecting it
+            company_name_entry.focus_set()
 
             tk.Label(manage_window, text="Position").grid(row=1, column=0)
             position_entry = tk.Entry(manage_window)
@@ -116,6 +136,7 @@ def open_management_window(searching, id=None, company_name = None, position = N
             tk.Button(manage_window, text='Save', command=lambda: change_content_kill(id,company_name_entry.get(),position_entry.get(),email_entry.get(),password_entry.get(),interview_stage_entry.get(),notes_entry.get())).grid(row = 6, column=0)
             tk.Button(manage_window, text='Delete Application', command=lambda:remove_application(id)).grid(row = 6, column=1)
             manage_window.bind('<Return>', lambda event: change_content_kill(id,company_name_entry.get(),position_entry.get(),email_entry.get(),password_entry.get(),interview_stage_entry.get(),notes_entry.get()))
+            center_window(manage_window)
     def search_applications():
 
         nonlocal company_search  # Allow modification of the company_search variable
@@ -131,6 +152,7 @@ def open_management_window(searching, id=None, company_name = None, position = N
             tk.Label(manage_window, text="No Matching Applications, Try Again").grid(row=1, column=0)
             company_search = tk.Entry(manage_window)  # Update company_search to the new entry field
             company_search.grid(row= 1, column=1)
+            company_search.focus_set()
             tk.Button(manage_window, text="Search", command=search_applications).grid(row=2, column=0, columnspan=2)
             
             return
@@ -138,7 +160,13 @@ def open_management_window(searching, id=None, company_name = None, position = N
         # Clear the current labels (if any)
         for widget in manage_window.grid_slaves():
             widget.grid_forget()
-
+        
+        tk.Label(manage_window, text="Company Name").grid(row=0, column=1)
+        tk.Label(manage_window, text="Position").grid(row=0, column=2)
+        tk.Label(manage_window, text="Email").grid(row=0, column=3)
+        tk.Label(manage_window, text="Password").grid(row=0, column=4)
+        tk.Label(manage_window, text="Interview Stage").grid(row=0, column=5)
+        tk.Label(manage_window, text="Notes").grid(row=0, column=6)
         # Display the results
         for i, app in enumerate(results, start=1):
             id, company_name, position, email, password, interview_stage, notes = app
@@ -165,10 +193,12 @@ def open_management_window(searching, id=None, company_name = None, position = N
         
         # Update the search button to trigger the same search_applications function
         tk.Button(manage_window, text="Search", command=search_applications).grid(row=i + 2, column=0, columnspan=2)
+        center_window(manage_window)
     if(searching):
         # Initial search button
         tk.Button(manage_window, text="Search", command=search_applications).grid(row=1, column=0, columnspan=2)
         manage_window.bind('<Return>', lambda event: search_applications())
+        center_window(manage_window)
     elif(company_name != None and id != None):
         manage_application(id,company_name,position, email,password,interview_stage, notes)
     else:
@@ -181,6 +211,9 @@ def refresh_applications():
     # Clear the current labels (if any)
     for widget in root.grid_slaves():
         widget.grid_forget()
+
+    
+    
     if(len(db.get_all_applications()) != 0 ):
     # Create labels for the column headers
         tk.Label(root, text="Company Name").grid(row=0, column=1)
@@ -209,6 +242,10 @@ def refresh_applications():
     tk.Button(root, text="Add Application", command=open_add_application_window).grid(row=i + 1 , column=0, columnspan=6)
     #Add Manage Application Button
     tk.Button(root, text="Search Applications", command=lambda: open_management_window(True)).grid(row=i + 10, column=0, columnspan=6)
+
+    center_window(root)
+    root.update_idletasks()
+    root.geometry(f"{root.winfo_reqwidth()}x{root.winfo_reqheight()}")
 
 # Initial display of applications
 refresh_applications()
