@@ -5,7 +5,7 @@ Currently I have a working product that was produced in only a few days of study
 Current Features:<br/>
 Full management of applications including a search function to surf through your applications.<br/><br/>
 Placement of window in center of screen and proper wrapping to size of applications.<br/><br/>
-Quick and easy use of binds to hgelp for ease of use<br/>
+Quick and easy use of binds to hgelp for ease of use<br/><br/>
 
 Currently Planned Features:<br/>
 Encrytion of information<br/><br/>
