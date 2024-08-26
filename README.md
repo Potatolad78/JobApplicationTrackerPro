@@ -8,7 +8,7 @@ Placement of window in center of screen and proper wrapping to size of applicati
 Quick and easy use of binds to hgelp for ease of use
 
 Currently Planned Features:
-Encrytion of information
+Encrytion of information <br/>
 Ability to use online
 Calender functionality
 
